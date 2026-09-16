@@ -1,5 +1,5 @@
 import { useStore } from '../state/store';
-import { CloseIcon, CloudIcon, HomeIcon } from './icons';
+import { CloseIcon, CloudIcon, DropletIcon, HomeIcon } from './icons';
 import { formatTemperature, formatTime } from './format';
 import type { MouseEvent } from 'react';
 import type { Location } from '../types';
@@ -19,6 +19,10 @@ export function SidebarCard({ location, isHome }: SidebarCardProps) {
   const temperature = formatTemperature(location.weather.temperature_c);
   const high = formatTemperature(location.weather.forecast_high_c);
   const low = formatTemperature(location.weather.forecast_low_c);
+  const humidity = location.weather.humidity_percent;
+  const rainfall = location.weather.rainfall_mm;
+  const hasHumidity = typeof humidity === 'number' && Number.isFinite(humidity);
+  const hasRainfall = typeof rainfall === 'number' && Number.isFinite(rainfall);
 
   const onSelect = () => select(location.id);
   const onDelete = async (event: MouseEvent<HTMLButtonElement>) => {
@@ -64,6 +68,17 @@ export function SidebarCard({ location, isHome }: SidebarCardProps) {
             H:{high} L:{low}
           </div>
         </div>
+        {(hasHumidity || hasRainfall) && (
+          <div className="flex gap-3 border-t border-white/10 px-4 py-2 text-[11px] tabular-nums text-white/65">
+            {hasHumidity && <span>Humidity {Math.round(humidity)}%</span>}
+            {hasRainfall && (
+              <span className="flex items-center gap-1">
+                <DropletIcon className="h-3 w-3" />
+                {rainfall.toFixed(1)} mm
+              </span>
+            )}
+          </div>
+        )}
       </button>
       <button
         type="button"
