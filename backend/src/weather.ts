@@ -182,9 +182,52 @@ export class SingaporeWeatherClient {
 
   async getCurrentWeather(latitude: number, longitude: number): Promise<WeatherSnapshot> {
     const forecastPayload = await this.fetchLatestForecastPayload().catch(() => null);
-    return forecastPayload
+    const snapshot = forecastPayload
       ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
       : this.emptyForecastSnapshot();
+
+    // A condition card is still useful when an individual station feed is delayed or
+    // unavailable, so enrich the forecast independently instead of failing the whole
+    // refresh when one of the realtime readings cannot be retrieved.
+    const [
+      temperature,
+      humidity,
+      rainfall,
+      windSpeed,
+      windDirection,
+      uvIndex,
+      airQuality,
+      twentyFourHourForecast,
+      fourDayForecast,
+    ] =
+      await Promise.allSettled([
+        this.fetchNearestReading('air-temperature', latitude, longitude),
+        this.fetchNearestReading('relative-humidity', latitude, longitude),
+        this.fetchNearestReading('rainfall', latitude, longitude),
+        this.fetchNearestReading('wind-speed', latitude, longitude),
+        this.fetchNearestReading('wind-direction', latitude, longitude),
+        this.fetchUvIndex(),
+        this.fetchAirQuality(latitude, longitude),
+        this.fetchTwentyFourHourForecast(latitude, longitude),
+        this.fetchFourDayForecast(),
+      ]);
+
+    return {
+      ...snapshot,
+      temperature_c: settledReadingValue(temperature),
+      humidity_percent: settledReadingValue(humidity),
+      rainfall_mm: settledReadingValue(rainfall),
+      wind_speed_knots: settledReadingValue(windSpeed),
+      wind_direction_degrees: settledReadingValue(windDirection),
+      uv_index: settledReadingValue(uvIndex),
+      psi_twenty_four_hourly: settledAirQualityValue(airQuality, 'psi'),
+      pm25_one_hourly: settledAirQualityValue(airQuality, 'pm25'),
+      air_quality_region: settledAirQualityValue(airQuality, 'region'),
+      forecast_low_c: settledForecastValue(twentyFourHourForecast, 'low'),
+      forecast_high_c: settledForecastValue(twentyFourHourForecast, 'high'),
+      forecast_periods: settledForecastValue(twentyFourHourForecast, 'periods') ?? [],
+      daily_forecast: settledForecastValue(fourDayForecast, 'days') ?? [],
+    };
   }
 
   async fetchLatestForecastPayload(): Promise<ForecastPayload> {
@@ -549,6 +592,37 @@ function latestTimestamp(timestamps: Array<string | null>): string | null {
 function numberOrNull(value: number | string | undefined): number | null {
   const number = Number(value);
   return Number.isNaN(number) ? null : number;
+}
+
+function settledReadingValue(
+  result: PromiseSettledResult<{ value: number | null; timestamp: string | null }>,
+): number | null {
+  return result.status === 'fulfilled' ? result.value.value : null;
+}
+
+function settledForecastValue<
+  T extends { low: number | null; high: number | null; periods: ForecastPeriod[] } | {
+    days: DailyForecast[];
+  },
+  K extends keyof T,
+>(result: PromiseSettledResult<T>, key: K): T[K] | null {
+  return result.status === 'fulfilled' ? result.value[key] : null;
+}
+
+function settledAirQualityValue<
+  K extends 'psi' | 'pm25' | 'region',
+>(
+  result: PromiseSettledResult<{
+    psi: number | null;
+    pm25: number | null;
+    region: string | null;
+    timestamp: string | null;
+  }>,
+  key: K,
+): K extends 'region' ? string | null : number | null {
+  return (result.status === 'fulfilled' ? result.value[key] : null) as K extends 'region'
+    ? string | null
+    : number | null;
 }
 
 function valueForRegion(
