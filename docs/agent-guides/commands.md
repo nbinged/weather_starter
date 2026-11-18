@@ -6,7 +6,9 @@ Run commands from the repository root.
 npm install                 # Install workspace dependencies
 npm run dev                 # Run Express + Vite through Portless
 npm run build               # Type-check/build frontend and compile backend
+npm run lint                # Lint frontend and backend source
 npm test                    # Run backend API tests once
+npm run test:e2e            # Run browser interaction tests
 npm run test:watch          # Run backend API tests in watch mode
 npm run doctor              # Check the running app's health and locations endpoints
 npm run start               # Serve a production build (build first)
@@ -27,8 +29,10 @@ npm run build -w backend    # Compile the Express server
 npm run dev -w backend      # Watch/run the Express server alone
 ```
 
-No lint script or ESLint configuration currently exists. `npm run build`
-performs TypeScript checking.
+`npm run build` performs TypeScript checking; `npm run lint` runs ESLint across
+the React frontend and TypeScript backend.
+
+Install Playwright's Chromium browser once with `npx playwright install chromium`.
 
 ## Required checks by change type
 

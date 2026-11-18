@@ -149,6 +149,12 @@ export interface DailyForecast {
   temperature_high_c: number | null;
 }
 
+export interface ForecastArea {
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface WeatherSnapshot {
   condition: string;
   observed_at: string;
@@ -179,6 +185,25 @@ export class SingaporeWeatherClient {
       userAgent?: string;
     } = {},
   ) {}
+
+  async getNearestForecastArea(latitude: number, longitude: number): Promise<ForecastArea> {
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      throw new WeatherProviderError('A valid position is required to find a forecast area');
+    }
+
+    const payload = await this.fetchLatestForecastPayload();
+    if (payload.code !== undefined && payload.code !== 0) {
+      throw new WeatherProviderError(payload.errorMsg ?? 'Weather provider returned an error');
+    }
+
+    const root = payload.data ?? payload;
+    const area = nearestArea(root.area_metadata ?? [], latitude, longitude);
+    if (!area) {
+      throw new WeatherProviderError('No Singapore forecast area is available');
+    }
+
+    return { name: area.name, latitude: area.latitude, longitude: area.longitude };
+  }
 
   async getCurrentWeather(latitude: number, longitude: number): Promise<WeatherSnapshot> {
     const forecastPayload = await this.fetchLatestForecastPayload().catch(() => null);
@@ -444,13 +469,13 @@ export class SingaporeWeatherClient {
         .map((entry) => [entry.area as string, entry.forecast as string]),
     );
 
-    const nearestArea = nearestAreaName(areaMetadata, latitude, longitude);
-    if (nearestArea && forecastByArea.has(nearestArea)) {
+    const nearestForecastArea = nearestArea(areaMetadata, latitude, longitude);
+    if (nearestForecastArea && forecastByArea.has(nearestForecastArea.name)) {
       return {
-        condition: forecastByArea.get(nearestArea) as string,
+        condition: forecastByArea.get(nearestForecastArea.name) as string,
         observed_at: latestItem.update_timestamp ?? latestItem.timestamp ?? '',
         source: 'api-open.data.gov.sg',
-        area: nearestArea,
+        area: nearestForecastArea.name,
         valid_period_text: latestItem.valid_period?.text ?? null,
         temperature_c: null,
         humidity_percent: null,
@@ -515,25 +540,29 @@ export class SingaporeWeatherClient {
   }
 }
 
-function nearestAreaName(
+function nearestArea(
   areaMetadata: AreaMetadata[],
   latitude: number,
   longitude: number,
-): string | null {
-  let nearest: { name: string; distance: number } | null = null;
+): (ForecastArea & { distance: number }) | null {
+  let nearest: (ForecastArea & { distance: number }) | null = null;
 
   for (const area of areaMetadata) {
-    const lat = Number(area.label_location?.latitude);
-    const lon = Number(area.label_location?.longitude);
-    if (!area.name || Number.isNaN(lat) || Number.isNaN(lon)) continue;
+    const sourceLatitude = area.label_location?.latitude;
+    const sourceLongitude = area.label_location?.longitude;
+    if (!area.name || sourceLatitude == null || sourceLongitude == null) continue;
+
+    const lat = Number(sourceLatitude);
+    const lon = Number(sourceLongitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
 
     const distance = (lat - latitude) ** 2 + (lon - longitude) ** 2;
     if (!nearest || distance < nearest.distance) {
-      nearest = { name: area.name, distance };
+      nearest = { name: area.name, latitude: lat, longitude: lon, distance };
     }
   }
 
-  return nearest?.name ?? null;
+  return nearest;
 }
 
 function nearestRegionName(

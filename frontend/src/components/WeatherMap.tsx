@@ -25,12 +25,6 @@ function hasCoordinates(location: Location): boolean {
   );
 }
 
-function locationName(location: Location): string {
-  return (
-    location.weather.area || `${location.latitude.toFixed(3)}, ${location.longitude.toFixed(3)}`
-  );
-}
-
 function Viewport({ locations, expanded }: Pick<WeatherMapProps, 'locations' | 'expanded'>) {
   const map = useMap();
   const coordinateLocations = useMemo(() => locations.filter(hasCoordinates), [locations]);

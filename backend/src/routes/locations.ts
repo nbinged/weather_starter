@@ -2,15 +2,22 @@ import type { Router } from 'express';
 import { Router as createRouter } from 'express';
 import {
   createLocation,
+  createLocationIfMissing,
   deleteLocation,
   getLocation,
   listLocations,
   updateWeather,
 } from '../db.js';
-import { SingaporeWeatherClient, WeatherProviderError, type WeatherSnapshot } from '../weather.js';
+import {
+  SingaporeWeatherClient,
+  WeatherProviderError,
+  type ForecastArea,
+  type WeatherSnapshot,
+} from '../weather.js';
 import { logger } from '../logger.js';
 
 export interface WeatherClient {
+  getNearestForecastArea(latitude: number, longitude: number): Promise<ForecastArea>;
   getCurrentWeather(latitude: number, longitude: number): Promise<WeatherSnapshot>;
 }
 
@@ -74,6 +81,58 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
     }
   });
 
+  router.post('/locations/nearest', async (request, response, next) => {
+    const latitude = Number(request.body?.latitude);
+    const longitude = Number(request.body?.longitude);
+
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      response.status(422).json({ detail: 'latitude and longitude are required' });
+      return;
+    }
+    if (!isWithinSingapore(latitude, longitude)) {
+      response.status(422).json({
+        detail: 'Coordinates must be within Singapore (lat 1.1-1.5, lon 103.6-104.1)',
+      });
+      return;
+    }
+
+    try {
+      const area = await weatherClient.getNearestForecastArea(latitude, longitude);
+      if (!isWithinSingapore(area.latitude, area.longitude)) {
+        response.status(502).json({ detail: 'Weather provider returned an invalid forecast area' });
+        return;
+      }
+
+      const result = await createLocationIfMissing(area.latitude, area.longitude);
+      if (!result.created) {
+        response.status(200).json(result.location);
+        return;
+      }
+
+      try {
+        const snapshot = await weatherClient.getCurrentWeather(
+          result.location.latitude,
+          result.location.longitude,
+        );
+        const updated = await updateWeather(result.location.id, snapshot);
+        response.status(201).json(updated ?? result.location);
+      } catch (error) {
+        if (!(error instanceof WeatherProviderError)) throw error;
+        logger.warn(
+          { err: error, locationId: result.location.id },
+          'weather refresh failed after nearest location create',
+        );
+        response.status(201).json(result.location);
+      }
+    } catch (error) {
+      if (error instanceof WeatherProviderError) {
+        response.status(502).json({ detail: error.message });
+        return;
+      }
+      next(error);
+    }
+  });
+
   router.get('/locations/:locationId', async (request, response, next) => {
     try {
       const location = await getLocation(Number(request.params.locationId));
@@ -122,4 +181,8 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
   });
 
   return router;
+}
+
+function isWithinSingapore(latitude: number, longitude: number): boolean {
+  return 1.1 <= latitude && latitude <= 1.5 && 103.6 <= longitude && longitude <= 104.1;
 }

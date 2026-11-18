@@ -89,6 +89,31 @@ export async function createLocation(latitude: number, longitude: number): Promi
   return rowToRecord(row);
 }
 
+export async function createLocationIfMissing(
+  latitude: number,
+  longitude: number,
+): Promise<{ location: LocationRecord; created: boolean }> {
+  const createdAt = new Date().toISOString().slice(0, 19);
+  const weather = weatherToColumns(defaultWeather);
+  const inserted = await db
+    .insert(locations)
+    .values({ latitude, longitude, createdAt, ...weather })
+    .onConflictDoNothing({ target: [locations.latitude, locations.longitude] })
+    .returning()
+    .get();
+
+  if (inserted) return { location: rowToRecord(inserted), created: true };
+
+  const existing = await db
+    .select()
+    .from(locations)
+    .where(and(eq(locations.latitude, latitude), eq(locations.longitude, longitude)))
+    .get();
+  if (!existing) throw new Error('Location could not be created or retrieved');
+
+  return { location: rowToRecord(existing), created: false };
+}
+
 export async function getLocation(id: number): Promise<LocationRecord | null> {
   const row = await db.select().from(locations).where(eq(locations.id, id)).get();
   return row ? rowToRecord(row) : null;

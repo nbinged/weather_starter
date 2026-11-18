@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import {
   listLocations,
   createLocation,
+  createNearestLocation,
   deleteLocation,
   refreshLocation,
   logInteraction,
@@ -72,6 +73,36 @@ export function StoreProvider({ children }: ProviderProps) {
     [load],
   );
 
+  const addNearestLocation = useCallback(async (payload: CreateLocationPayload) => {
+    setError(null);
+    logInteraction('location_nearest_submitted');
+    try {
+      const result = await createNearestLocation(payload);
+      setLocations((current) => {
+        const alreadyLoaded = current.some((location) => location.id === result.location.id);
+        if (alreadyLoaded) {
+          return current.map((location) =>
+            location.id === result.location.id ? result.location : location,
+          );
+        }
+        return result.created ? [result.location, ...current] : [...current, result.location];
+      });
+      setSelectedId(result.location.id);
+      setIsAdding(false);
+      logInteraction('location_nearest_resolved', {
+        locationId: result.location.id,
+        created: result.created,
+      });
+      return result;
+    } catch (err) {
+      setError(err);
+      logInteraction('location_nearest_failed', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+      });
+      throw err;
+    }
+  }, []);
+
   const refresh = useCallback(
     async (id: number) => {
       setRefreshingId(id);
@@ -125,6 +156,7 @@ export function StoreProvider({ children }: ProviderProps) {
       if (nextIsAdding) logInteraction('location_form_opened');
     },
     create,
+    addNearestLocation,
     remove,
     refresh,
   };

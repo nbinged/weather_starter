@@ -7,6 +7,51 @@ const longitude = 103.85;
 describe('SingaporeWeatherClient current conditions', () => {
   afterEach(() => vi.unstubAllGlobals());
 
+  it('resolves the nearest forecast area and its representative coordinates', async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            data: {
+              area_metadata: [
+                { name: 'Bishan', label_location: { latitude: 1.35, longitude: 103.85 } },
+                { name: 'West', label_location: { latitude: 1.4, longitude: 103.7 } },
+              ],
+              items: [],
+            },
+          }),
+        ),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(
+      new SingaporeWeatherClient({ baseUrl: 'https://weather.example' }).getNearestForecastArea(
+        1.351,
+        103.851,
+      ),
+    ).resolves.toEqual({ name: 'Bishan', latitude: 1.35, longitude: 103.85 });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects forecast metadata without a usable area coordinate', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({ data: { area_metadata: [{ name: 'Unknown' }], items: [] } }),
+          ),
+      ),
+    );
+
+    await expect(
+      new SingaporeWeatherClient({ baseUrl: 'https://weather.example' }).getNearestForecastArea(
+        latitude,
+        longitude,
+      ),
+    ).rejects.toThrow('No Singapore forecast area is available');
+  });
+
   it('combines the nearest realtime readings with the two-hour area forecast', async () => {
     const fetchMock = vi.fn(async (input: string | URL) => {
       const endpoint = String(input).split('/').pop() ?? '';
