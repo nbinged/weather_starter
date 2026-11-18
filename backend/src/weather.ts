@@ -199,18 +199,17 @@ export class SingaporeWeatherClient {
       airQuality,
       twentyFourHourForecast,
       fourDayForecast,
-    ] =
-      await Promise.allSettled([
-        this.fetchNearestReading('air-temperature', latitude, longitude),
-        this.fetchNearestReading('relative-humidity', latitude, longitude),
-        this.fetchNearestReading('rainfall', latitude, longitude),
-        this.fetchNearestReading('wind-speed', latitude, longitude),
-        this.fetchNearestReading('wind-direction', latitude, longitude),
-        this.fetchUvIndex(),
-        this.fetchAirQuality(latitude, longitude),
-        this.fetchTwentyFourHourForecast(latitude, longitude),
-        this.fetchFourDayForecast(),
-      ]);
+    ] = await Promise.allSettled([
+      this.fetchNearestReading('air-temperature', latitude, longitude),
+      this.fetchNearestReading('relative-humidity', latitude, longitude),
+      this.fetchNearestReading('rainfall', latitude, longitude),
+      this.fetchNearestReading('wind-speed', latitude, longitude),
+      this.fetchNearestReading('wind-direction', latitude, longitude),
+      this.fetchUvIndex(),
+      this.fetchAirQuality(latitude, longitude),
+      this.fetchTwentyFourHourForecast(latitude, longitude),
+      this.fetchFourDayForecast(),
+    ]);
 
     return {
       ...snapshot,
@@ -601,17 +600,17 @@ function settledReadingValue(
 }
 
 function settledForecastValue<
-  T extends { low: number | null; high: number | null; periods: ForecastPeriod[] } | {
-    days: DailyForecast[];
-  },
+  T extends
+    | { low: number | null; high: number | null; periods: ForecastPeriod[] }
+    | {
+        days: DailyForecast[];
+      },
   K extends keyof T,
 >(result: PromiseSettledResult<T>, key: K): T[K] | null {
   return result.status === 'fulfilled' ? result.value[key] : null;
 }
 
-function settledAirQualityValue<
-  K extends 'psi' | 'pm25' | 'region',
->(
+function settledAirQualityValue<K extends 'psi' | 'pm25' | 'region'>(
   result: PromiseSettledResult<{
     psi: number | null;
     pm25: number | null;
@@ -632,7 +631,6 @@ function valueForRegion(
   if (!values || !region) return null;
   return numberOrNull(values[region]);
 }
-
 
 function defaultRegions(): RegionMetadata[] {
   return [

@@ -4,8 +4,22 @@ export const themes = [
   { id: 'apple', name: 'Apple', description: 'The original frosted blue interface' },
   { id: 'coastal-mist', name: 'Coastal Mist', description: 'Soft slate blue and seafoam glass' },
   { id: 'aurora', name: 'Aurora', description: 'Luminous violet and teal glass' },
-  { id: 'midnight', name: 'Midnight', description: 'Deep navy radar mode' },
-  { id: 'solar', name: 'Solar', description: 'Warm, optimistic daylight' },
+  {
+    id: 'midnight-radar',
+    name: 'Midnight Radar',
+    description: 'Charcoal dashboard with cyan radar signals',
+  },
+  {
+    id: 'paper-almanac',
+    name: 'Paper Almanac',
+    description: 'Warm editorial paper in ink and rust',
+  },
+  { id: 'solar-pop', name: 'Solar Pop', description: 'Bright yellow, coral, and sky blue' },
+  {
+    id: 'desert-heat',
+    name: 'Desert Heat',
+    description: 'Sun-baked sand, terracotta, and midnight blue',
+  },
 ] as const;
 
 export type ThemeId = (typeof themes)[number]['id'];

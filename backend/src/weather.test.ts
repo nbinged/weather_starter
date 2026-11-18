@@ -31,9 +31,7 @@ describe('SingaporeWeatherClient current conditions', () => {
         'wind-direction': stationPayload(180),
         uv: {
           data: {
-            records: [
-              { updatedTimestamp: '2026-09-16T10:00:00+08:00', index: [{ value: 6 }] },
-            ],
+            records: [{ updatedTimestamp: '2026-09-16T10:00:00+08:00', index: [{ value: 6 }] }],
           },
         },
         psi: airQualityPayload('psi_twenty_four_hourly', 42),
@@ -71,8 +69,9 @@ describe('SingaporeWeatherClient current conditions', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    const snapshot = await new SingaporeWeatherClient({ baseUrl: 'https://weather.example' })
-      .getCurrentWeather(latitude, longitude);
+    const snapshot = await new SingaporeWeatherClient({
+      baseUrl: 'https://weather.example',
+    }).getCurrentWeather(latitude, longitude);
 
     expect(snapshot).toMatchObject({
       area: 'Bishan',
@@ -122,8 +121,9 @@ describe('SingaporeWeatherClient current conditions', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    const snapshot = await new SingaporeWeatherClient({ baseUrl: 'https://weather.example' })
-      .getCurrentWeather(latitude, longitude);
+    const snapshot = await new SingaporeWeatherClient({
+      baseUrl: 'https://weather.example',
+    }).getCurrentWeather(latitude, longitude);
 
     expect(snapshot.condition).toBe('Cloudy');
     expect(snapshot.humidity_percent).toBeNull();

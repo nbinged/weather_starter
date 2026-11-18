@@ -26,7 +26,9 @@ function hasCoordinates(location: Location): boolean {
 }
 
 function locationName(location: Location): string {
-  return location.weather.area || `${location.latitude.toFixed(3)}, ${location.longitude.toFixed(3)}`;
+  return (
+    location.weather.area || `${location.latitude.toFixed(3)}, ${location.longitude.toFixed(3)}`
+  );
 }
 
 function Viewport({ locations, expanded }: Pick<WeatherMapProps, 'locations' | 'expanded'>) {
@@ -46,7 +48,9 @@ function Viewport({ locations, expanded }: Pick<WeatherMapProps, 'locations' | '
       map.setView([location.latitude, location.longitude], 12, { animate: false });
     } else {
       map.fitBounds(
-        coordinateLocations.map((location) => [location.latitude, location.longitude] as [number, number]),
+        coordinateLocations.map(
+          (location) => [location.latitude, location.longitude] as [number, number],
+        ),
         { padding: expanded ? [72, 72] : [36, 36], maxZoom: 12, animate: false },
       );
     }

@@ -38,7 +38,12 @@ export function SidebarCard({ location, isHome }: SidebarCardProps) {
           : 'border-white/10 bg-white/[0.07] hover:bg-white/[0.12]'
       }`}
     >
-      <button type="button" onClick={onSelect} aria-pressed={isSelected} className="block w-full text-left">
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-pressed={isSelected}
+        className="block w-full text-left"
+      >
         <div className="flex items-start justify-between gap-3 px-4 pb-0 pt-3 pr-11">
           <div className="min-w-0">
             <div className="truncate text-lg font-semibold leading-tight text-white">{area}</div>

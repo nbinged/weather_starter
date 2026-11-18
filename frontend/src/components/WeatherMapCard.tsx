@@ -6,7 +6,13 @@ import { WeatherMap } from './WeatherMap';
 
 function ExpandIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.7">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    >
       <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" />
       <path d="m3 8 6-6M21 8l-6-6M3 16l6 6M21 16l-6 6" />
     </svg>
@@ -86,7 +92,9 @@ export function WeatherMapCard() {
           <div className="absolute inset-x-0 top-0 z-[1000] flex items-center justify-between gap-4 border-b border-white/10 bg-slate-950/80 px-4 py-3 backdrop-blur-xl sm:px-6">
             <div>
               <div className="text-base font-medium text-white">Saved Locations</div>
-              <p className="text-xs text-white/65">Select a pin to view that location on the dashboard.</p>
+              <p className="text-xs text-white/65">
+                Select a pin to view that location on the dashboard.
+              </p>
             </div>
             <button
               type="button"

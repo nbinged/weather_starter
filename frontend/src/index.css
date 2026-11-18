@@ -34,7 +34,7 @@ body {
     radial-gradient(100% 85% at 82% -10%, rgba(225, 247, 240, 0.34) 0%, transparent 53%),
     radial-gradient(80% 75% at 0% 100%, rgba(103, 163, 167, 0.5) 0%, transparent 62%),
     linear-gradient(165deg, #829fb0 0%, #607f90 43%, #456777 100%);
-  font-family: ui-rounded, "SF Pro Rounded", "Nunito Sans", system-ui, sans-serif;
+  font-family: ui-rounded, 'SF Pro Rounded', 'Nunito Sans', system-ui, sans-serif;
 }
 
 :root[data-theme='coastal-mist'] .theme-selector {
@@ -55,7 +55,9 @@ body {
 :root[data-theme='coastal-mist'] .weather-map-pin--selected {
   border-color: #edfff8;
   background: #b7dfcf;
-  box-shadow: 0 0 0 5px rgb(183 223 207 / 26%), 0 2px 14px rgb(23 64 72 / 80%);
+  box-shadow:
+    0 0 0 5px rgb(183 223 207 / 26%),
+    0 2px 14px rgb(23 64 72 / 80%);
 }
 
 :root[data-theme='coastal-mist'] .weather-map-label {
@@ -69,25 +71,319 @@ body {
   background: rgb(48 104 102 / 92%);
 }
 
+:root[data-theme='aurora'] {
+  color-scheme: dark;
+}
+
 :root[data-theme='aurora'] body {
   background:
-    radial-gradient(95% 75% at 80% 0%, rgba(102, 255, 214, 0.28) 0%, transparent 55%),
-    radial-gradient(85% 65% at 5% 90%, rgba(181, 105, 255, 0.4) 0%, transparent 60%),
+    radial-gradient(95% 75% at 80% 0%, rgba(102, 255, 214, 0.34) 0%, transparent 55%),
+    radial-gradient(85% 65% at 5% 90%, rgba(181, 105, 255, 0.48) 0%, transparent 60%),
     linear-gradient(160deg, #17214d 0%, #34255c 55%, #142f44 100%);
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-:root[data-theme='midnight'] body {
-  background:
-    radial-gradient(85% 60% at 85% 5%, rgba(0, 189, 219, 0.18) 0%, transparent 56%),
-    radial-gradient(70% 70% at 0% 100%, rgba(16, 115, 167, 0.22) 0%, transparent 62%),
-    linear-gradient(155deg, #0b1424 0%, #111f33 50%, #07111d 100%);
+:root[data-theme='aurora'] .theme-selector {
+  border-color: rgb(183 169 255 / 34%);
+  background: rgb(43 30 83 / 40%);
+  box-shadow: 0 10px 30px rgb(22 18 68 / 28%);
 }
 
-:root[data-theme='solar'] body {
+:root[data-theme='aurora'] .theme-selector__control {
+  background-color: rgb(163 129 255 / 19%);
+}
+
+:root[data-theme='aurora'] [class*='backdrop-blur-xl'] {
+  border-color: rgb(185 215 255 / 22%);
+  background-color: rgb(45 36 91 / 39%);
+  box-shadow: 0 8px 24px rgb(18 14 58 / 18%);
+}
+
+:root[data-theme='aurora'] [class*='backdrop-blur-2xl'] {
+  border-color: rgb(185 215 255 / 15%);
+  background-color: rgb(28 30 74 / 40%);
+}
+
+:root[data-theme='aurora'] .weather-map-pin {
+  background: #62e2cb;
+  box-shadow: 0 2px 12px rgb(18 14 58 / 72%);
+}
+
+:root[data-theme='aurora'] .weather-map-pin--selected {
+  border-color: #f2e5ff;
+  background: #bd8bff;
+  box-shadow:
+    0 0 0 5px rgb(189 139 255 / 28%),
+    0 2px 14px rgb(18 14 58 / 82%);
+}
+
+:root[data-theme='aurora'] .weather-map-label {
+  border-color: rgb(192 226 255 / 25%);
+  background: rgb(35 28 83 / 89%);
+  box-shadow: 0 4px 16px rgb(18 14 58 / 46%);
+}
+
+:root[data-theme='aurora'] .weather-map-label--selected {
+  border-color: rgb(234 210 255 / 60%);
+  background: rgb(76 43 111 / 94%);
+}
+
+:root[data-theme='midnight-radar'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='midnight-radar'] body {
   background:
-    radial-gradient(100% 75% at 80% 0%, rgba(255, 244, 184, 0.48) 0%, transparent 56%),
-    radial-gradient(80% 70% at 0% 100%, rgba(239, 126, 87, 0.38) 0%, transparent 62%),
-    linear-gradient(165deg, #789cc0 0%, #a88286 50%, #6d596e 100%);
+    radial-gradient(82% 62% at 88% 0%, rgba(0, 212, 238, 0.17) 0%, transparent 54%),
+    radial-gradient(72% 70% at 2% 100%, rgba(4, 116, 137, 0.2) 0%, transparent 62%),
+    linear-gradient(155deg, #070d15 0%, #111d2c 48%, #060b12 100%);
+  font-family: 'Arial Narrow', 'Roboto Condensed', ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+:root[data-theme='midnight-radar'] .theme-selector {
+  border-color: rgb(67 239 255 / 25%);
+  background: rgb(5 21 32 / 64%);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 32%);
+}
+
+:root[data-theme='midnight-radar'] .theme-selector__control {
+  background-color: rgb(0 204 230 / 14%);
+}
+
+:root[data-theme='midnight-radar'] [class*='backdrop-blur-xl'] {
+  border-color: rgb(78 229 244 / 19%);
+  background-color: rgb(9 24 37 / 54%);
+  box-shadow: 0 8px 22px rgb(0 0 0 / 14%);
+}
+
+:root[data-theme='midnight-radar'] [class*='backdrop-blur-2xl'] {
+  border-color: rgb(78 229 244 / 13%);
+  background-color: rgb(4 15 24 / 58%);
+}
+
+:root[data-theme='midnight-radar'] .weather-map-pin {
+  background: #13c8d9;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 76%);
+}
+
+:root[data-theme='midnight-radar'] .weather-map-pin--selected {
+  border-color: #d7fff1;
+  background: #58e398;
+  box-shadow:
+    0 0 0 5px rgb(88 227 152 / 22%),
+    0 2px 14px rgb(0 0 0 / 84%);
+}
+
+:root[data-theme='midnight-radar'] .weather-map-label {
+  border-color: rgb(62 224 240 / 25%);
+  background: rgb(5 20 31 / 92%);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 58%);
+}
+
+:root[data-theme='midnight-radar'] .weather-map-label--selected {
+  border-color: rgb(171 255 218 / 55%);
+  background: rgb(11 72 66 / 94%);
+}
+
+:root[data-theme='paper-almanac'] {
+  color-scheme: light;
+}
+
+:root[data-theme='paper-almanac'] body {
+  background:
+    radial-gradient(110% 80% at 100% 0%, rgba(255, 255, 255, 0.68) 0%, transparent 58%),
+    radial-gradient(82% 72% at 0% 100%, rgba(193, 141, 109, 0.24) 0%, transparent 66%),
+    linear-gradient(155deg, #f4eddf 0%, #e9decb 52%, #d8c5ac 100%);
+  color: #203449;
+  font-family: Charter, 'Iowan Old Style', Georgia, serif;
+}
+
+:root[data-theme='paper-almanac'] [class*='text-white'] {
+  color: rgb(32 52 73 / 78%) !important;
+}
+
+:root[data-theme='paper-almanac'] .text-white {
+  color: #203449 !important;
+}
+
+:root[data-theme='paper-almanac'] [class*='bg-white'] {
+  background-color: rgb(255 251 241 / 72%) !important;
+}
+
+:root[data-theme='paper-almanac'] [class*='border-white'] {
+  border-color: rgb(116 67 48 / 20%) !important;
+}
+
+:root[data-theme='paper-almanac'] [class*='backdrop-blur-xl'],
+:root[data-theme='paper-almanac'] [class*='backdrop-blur-2xl'] {
+  box-shadow: 0 7px 20px rgb(75 48 34 / 9%);
+}
+
+:root[data-theme='paper-almanac'] .theme-selector {
+  border-color: rgb(121 68 49 / 24%);
+  background: rgb(255 250 238 / 74%);
+  box-shadow: 0 8px 24px rgb(75 48 34 / 12%);
+}
+
+:root[data-theme='paper-almanac'] .theme-selector__label,
+:root[data-theme='paper-almanac'] .theme-selector__control {
+  color: #563b32;
+}
+
+:root[data-theme='paper-almanac'] .theme-selector__control {
+  background-color: rgb(179 97 64 / 13%);
+  background-image:
+    linear-gradient(45deg, transparent 50%, #563b32 50%),
+    linear-gradient(135deg, #563b32 50%, transparent 50%);
+}
+
+:root[data-theme='paper-almanac'] .weather-map-pin {
+  border-color: #fff8e8;
+  background: #b56549;
+  box-shadow: 0 2px 12px rgb(75 48 34 / 38%);
+}
+
+:root[data-theme='paper-almanac'] .weather-map-pin--selected {
+  border-color: #fff8e8;
+  background: #253c53;
+  box-shadow:
+    0 0 0 5px rgb(37 60 83 / 18%),
+    0 2px 14px rgb(75 48 34 / 44%);
+}
+
+:root[data-theme='paper-almanac'] .weather-map-label {
+  border-color: rgb(116 67 48 / 25%);
+  background: rgb(255 249 235 / 94%);
+  box-shadow: 0 4px 16px rgb(75 48 34 / 18%);
+  color: #203449;
+}
+
+:root[data-theme='paper-almanac'] .weather-map-label--selected {
+  border-color: rgb(37 60 83 / 50%);
+  background: rgb(234 222 201 / 96%);
+}
+
+:root[data-theme='paper-almanac'] .weather-map-label__weather {
+  color: rgb(32 52 73 / 65%);
+}
+
+:root[data-theme='solar-pop'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='solar-pop'] body {
+  background:
+    radial-gradient(100% 78% at 84% -8%, rgba(255, 233, 112, 0.68) 0%, transparent 48%),
+    radial-gradient(78% 72% at 2% 100%, rgba(244, 105, 83, 0.48) 0%, transparent 62%),
+    linear-gradient(160deg, #4a9fc9 0%, #477ca9 43%, #625c91 100%);
+  font-family:
+    Avenir Next,
+    Avenir,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+:root[data-theme='solar-pop'] .theme-selector {
+  border-color: rgb(255 243 172 / 40%);
+  background: rgb(42 71 112 / 42%);
+  box-shadow: 0 10px 30px rgb(45 50 104 / 25%);
+}
+
+:root[data-theme='solar-pop'] .theme-selector__control {
+  background-color: rgb(255 224 90 / 26%);
+}
+
+:root[data-theme='solar-pop'] [class*='backdrop-blur-xl'] {
+  border-color: rgb(255 238 176 / 27%);
+  background-color: rgb(31 57 100 / 38%);
+}
+
+:root[data-theme='solar-pop'] [class*='backdrop-blur-2xl'] {
+  background-color: rgb(35 69 110 / 34%);
+}
+
+:root[data-theme='solar-pop'] .weather-map-pin {
+  background: #4bb5df;
+  box-shadow: 0 2px 12px rgb(45 46 100 / 70%);
+}
+
+:root[data-theme='solar-pop'] .weather-map-pin--selected {
+  border-color: #fff9cf;
+  background: #ffcb52;
+  box-shadow:
+    0 0 0 5px rgb(255 203 82 / 30%),
+    0 2px 14px rgb(45 46 100 / 80%);
+}
+
+:root[data-theme='solar-pop'] .weather-map-label {
+  border-color: rgb(255 239 174 / 30%);
+  background: rgb(35 61 105 / 88%);
+  box-shadow: 0 4px 16px rgb(45 46 100 / 42%);
+}
+
+:root[data-theme='solar-pop'] .weather-map-label--selected {
+  border-color: rgb(255 248 197 / 65%);
+  background: rgb(132 72 63 / 93%);
+}
+
+:root[data-theme='desert-heat'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='desert-heat'] body {
+  background:
+    radial-gradient(108% 72% at 94% -12%, rgb(255 218 150 / 58%) 0%, transparent 48%),
+    radial-gradient(76% 68% at 0% 100%, rgb(187 75 38 / 43%) 0%, transparent 61%),
+    linear-gradient(158deg, #26405a 0%, #6c5260 44%, #bd6540 100%);
+  font-family: 'Avenir Next', Avenir, 'Helvetica Neue', ui-sans-serif, system-ui, sans-serif;
+}
+
+:root[data-theme='desert-heat'] .theme-selector {
+  border-color: rgb(255 227 177 / 36%);
+  background: rgb(42 51 66 / 57%);
+  box-shadow: 0 10px 30px rgb(56 35 34 / 25%);
+}
+
+:root[data-theme='desert-heat'] .theme-selector__control {
+  background-color: rgb(218 112 65 / 24%);
+}
+
+:root[data-theme='desert-heat'] [class*='backdrop-blur-xl'] {
+  border-color: rgb(255 230 185 / 24%);
+  background-color: rgb(57 56 65 / 53%);
+  box-shadow: 0 8px 22px rgb(75 40 34 / 16%);
+}
+
+:root[data-theme='desert-heat'] [class*='backdrop-blur-2xl'] {
+  border-color: rgb(255 230 185 / 18%);
+  background-color: rgb(36 50 67 / 64%);
+}
+
+:root[data-theme='desert-heat'] .weather-map-pin {
+  border-color: #fff0ce;
+  background: #d3693c;
+  box-shadow: 0 2px 12px rgb(55 35 34 / 70%);
+}
+
+:root[data-theme='desert-heat'] .weather-map-pin--selected {
+  border-color: #fff3d6;
+  background: #f1b75c;
+  box-shadow:
+    0 0 0 5px rgb(241 183 92 / 28%),
+    0 2px 14px rgb(55 35 34 / 80%);
+}
+
+:root[data-theme='desert-heat'] .weather-map-label {
+  border-color: rgb(255 225 174 / 29%);
+  background: rgb(38 50 65 / 91%);
+  box-shadow: 0 4px 16px rgb(55 35 34 / 46%);
+}
+
+:root[data-theme='desert-heat'] .weather-map-label--selected {
+  border-color: rgb(255 236 194 / 62%);
+  background: rgb(132 67 44 / 94%);
 }
 
 .theme-selector {
@@ -120,9 +416,15 @@ body {
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.38rem 1.7rem 0.38rem 0.65rem;
-  background-image: linear-gradient(45deg, transparent 50%, white 50%), linear-gradient(135deg, white 50%, transparent 50%);
-  background-position: calc(100% - 0.78rem) 50%, calc(100% - 0.53rem) 50%;
-  background-size: 0.25rem 0.25rem, 0.25rem 0.25rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, white 50%),
+    linear-gradient(135deg, white 50%, transparent 50%);
+  background-position:
+    calc(100% - 0.78rem) 50%,
+    calc(100% - 0.53rem) 50%;
+  background-size:
+    0.25rem 0.25rem,
+    0.25rem 0.25rem;
   background-repeat: no-repeat;
 }
 
@@ -199,7 +501,9 @@ input:focus-visible {
   margin: -2px;
   border-color: #fff4bf;
   background: #f6b84a;
-  box-shadow: 0 0 0 5px rgb(246 184 74 / 25%), 0 2px 14px rgb(15 23 42 / 80%);
+  box-shadow:
+    0 0 0 5px rgb(246 184 74 / 25%),
+    0 2px 14px rgb(15 23 42 / 80%);
 }
 
 .weather-map-label {
